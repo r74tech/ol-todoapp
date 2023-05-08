@@ -1,0 +1,94 @@
+version: "3.7"
+
+services:
+  front:
+    build:
+      context: ./front
+      dockerfile: ../dockerfiles/front/Dockerfile
+    working_dir: /usr/src/front/
+    command: sh -c "yarn start"
+    volumes:
+      - ./front:/usr/src/front
+    ports:
+      - "3000:3000"
+    stdin_open: true 
+
+  back:
+    build:
+      context: ./back
+      dockerfile: ../dockerfiles/back/Dockerfile
+    working_dir: /usr/src/back/
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    ports:
+      - "8000:3000"
+    volumes:
+      - ./back:/usr/src/back
+    env_file:
+      - ./.env
+    depends_on:
+      - db
+    networks:
+      - front_network
+      - back_network
+    restart: always
+
+  db:
+    image: postgres:14.6-alpine
+    volumes:
+      - db_data:/var/lib/postgresql/data/
+    env_file:
+      - ./.env
+    networks:
+      - back_network
+    restart: always
+  
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: ../dockerfiles/nginx/Dockerfile
+    expose:
+      - 8001
+    depends_on:
+      - back
+      # - front
+    networks:
+      - front_network
+    restart: always
+
+  # https-portal:
+  #   image: steveltn/https-portal:1
+  #   ports:
+  #     - 80:80
+  #     - 443:443
+  #   depends_on:
+  #     - nginx
+  #   networks:
+  #     - front_network
+  #   environment:
+  #     DOMAINS: 'localhost -> http://nginx:8001'
+  #     STAGE: 'local'
+  #   restart: always
+
+  pgadmin4:
+    image: dpage/pgadmin4
+    ports:
+        - 8880:80
+    volumes:
+        - pgadmin4_data:/var/lib/pgadmin
+    environment:
+        PGADMIN_DEFAULT_EMAIL: root@gmail.com
+        PGADMIN_DEFAULT_PASSWORD: password
+    depends_on:
+      - db
+    networks:
+      - back_network
+
+volumes:
+  db_data:
+  pgadmin4_data:
+
+networks:
+  front_network:
+    external: false
+  back_network:
+    external: false
