@@ -1,2 +1,2 @@
-FROM node:16.17.0-alpine
-WORKDIR /usr/src/front
+FROM node:19.6-slim
+WORKDIR /src/app

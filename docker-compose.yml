@@ -1,17 +1,22 @@
-version: "3.7"
+version: "3.8"
 
 services:
   front:
     build:
-      context: ./front
-      dockerfile: ../dockerfiles/front/Dockerfile
-    working_dir: /usr/src/front/
-    command: sh -c "yarn start"
+      context: .
+      dockerfile: dockerfiles/front/Dockerfile
+    command: sh -c "yarn install && yarn dev"
     volumes:
-      - ./front:/usr/src/front
+      - ./front:/src
+      - node_modules:/usr/app/node_modules
     ports:
-      - "3001:3000"
-    stdin_open: true 
+      - "8001:5173"
+    networks:
+      - back_network
+      - front_network
+    tty: true
+    stdin_open: true
+    restart: always
 
   back:
     build:
@@ -28,7 +33,6 @@ services:
     depends_on:
       - db
     networks:
-      - front_network
       - back_network
     restart: always
 
@@ -42,18 +46,19 @@ services:
       - back_network
     restart: always
   
-  nginx:
-    build:
-      context: ./nginx
-      dockerfile: ../dockerfiles/nginx/Dockerfile
-    expose:
-      - 8001
-    depends_on:
-      - back
-      # - front
-    networks:
-      - front_network
-    restart: always
+  # nginx:
+  #   build:
+  #     context: ./nginx
+  #     dockerfile: ../dockerfiles/nginx/Dockerfile
+  #   expose:
+  #     - 8002
+  #   depends_on:
+  #     - back
+  #     - front
+  #   networks:
+  #     - front_network
+  #     - back_network
+  #   restart: always
 
   # https-portal:
   #   image: steveltn/https-portal:1
@@ -64,8 +69,9 @@ services:
   #     - nginx
   #   networks:
   #     - front_network
+  #     - back_network
   #   environment:
-  #     DOMAINS: 'localhost -> http://nginx:8001'
+  #     DOMAINS: 'localhost -> http://nginx:8002'
   #     STAGE: 'local'
   #   restart: always
 
@@ -86,6 +92,7 @@ services:
 volumes:
   db_data:
   pgadmin4_data:
+  node_modules:
 
 networks:
   front_network:
