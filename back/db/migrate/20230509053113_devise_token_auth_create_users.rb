@@ -38,6 +38,9 @@ class DeviseTokenAuthCreateUsers < ActiveRecord::Migration[7.0]
       t.json :tokens
 
       t.timestamps
+
+      # JWT
+      t.string :jti, null: false
     end
 
     add_index :users, :email,                unique: true
@@ -45,5 +48,6 @@ class DeviseTokenAuthCreateUsers < ActiveRecord::Migration[7.0]
     add_index :users, :reset_password_token, unique: true
     add_index :users, :confirmation_token,   unique: true
     # add_index :users, :unlock_token,         unique: true
+    add_index :users, :jti, unique: true
   end
 end
