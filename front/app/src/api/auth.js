@@ -8,6 +8,9 @@ export const signUp = (params) => {
 
 // サインイン
 export const signIn = (params) => {
+    client.get("/auth/csrf");
+    // headerを設定
+    client.defaults.headers.common["X-CSRF-Token"] = Cookies.get("CSRF-TOKEN");
     return client.post("/auth/sign_in", params);
 };
 
@@ -30,7 +33,6 @@ export const getCurrentUser = () => {
         !Cookies.get("_uid")
     )
         return;
-
     return client.get("/auth/sessions", {
         headers: {
             "access-token": Cookies.get("_access_token"),

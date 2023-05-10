@@ -7,4 +7,6 @@ Rails.application.routes.draw do
   namespace :auth do
     resources :sessions, only: %i[index]
   end
+
+  get 'auth/csrf', to: 'auth/csrf_check#csrf_token'
 end

@@ -3,6 +3,7 @@ import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import { getCurrentUser } from "./api/auth";
 import { Home } from "./components/Home";
 import { SignIn } from "./components/SignIn";
+import { SignOut } from "./components/SignOut";
 import { SignUp } from "./components/SignUp";
 
 export const AuthContext = createContext();
@@ -62,6 +63,9 @@ function App() {
           </Route>
           <Route exact path="/signin">
             <SignIn />
+          </Route>
+          <Route exact path="/signout">
+            <SignOut />
           </Route>
           <Private>
             <Route exact path="/">
