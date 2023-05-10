@@ -1,33 +1,16 @@
 version: "3.8"
 
 services:
-  front:
+  app:
     build:
-      context: .
-      dockerfile: dockerfiles/front/Dockerfile
-    command: sh -c "yarn install && yarn dev"
-    volumes:
-      - ./front:/src
-      - node_modules:/usr/app/node_modules
-    ports:
-      - "8001:5173"
-    networks:
-      - back_network
-      - front_network
-    tty: true
-    stdin_open: true
-    restart: always
-
-  back:
-    build:
-      context: ./back
-      dockerfile: ../dockerfiles/back/Dockerfile
-    working_dir: /usr/src/back/
+      context: ./app
+      dockerfile: ../dockerfiles/app/Dockerfile
+    working_dir: /usr/src/app/
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
     ports:
       - "8000:3000"
     volumes:
-      - ./back:/usr/src/back
+      - ./app:/usr/src/app
     env_file:
       - ./.env
     depends_on:
