@@ -15,15 +15,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_10_072155) do
   enable_extension "plpgsql"
 
   create_table "tasks", force: :cascade do |t|
-    t.string "title", null: false
-    t.text "description"
-    t.datetime "target_at"
-    t.datetime "completed_at"
-    t.boolean "completed", default: false, null: false
-    t.bigint "user_id"
+    t.text "state"
+    t.text "task"
+    t.date "limit_date"
+    t.text "free_comment"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_tasks_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -39,5 +36,4 @@ ActiveRecord::Schema[7.0].define(version: 2023_05_10_072155) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  add_foreign_key "tasks", "users"
 end

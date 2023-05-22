@@ -11,13 +11,18 @@ class TasksControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  test "should get new" do
-    get tasks_new_url
+  test "should get store" do
+    get tasks_store_url
     assert_response :success
   end
 
-  test "should get edit" do
-    get tasks_edit_url
+  test "should get update" do
+    get tasks_update_url
+    assert_response :success
+  end
+
+  test "should get destroy" do
+    get tasks_destroy_url
     assert_response :success
   end
 end

@@ -65,7 +65,7 @@ services:
     volumes:
         - pgadmin4_data:/var/lib/pgadmin
     environment:
-        PGADMIN_DEFAULT_EMAIL: root@gmail.com
+        PGADMIN_DEFAULT_EMAIL:  
         PGADMIN_DEFAULT_PASSWORD: password
     depends_on:
       - db

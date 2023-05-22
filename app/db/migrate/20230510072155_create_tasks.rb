@@ -1,12 +1,11 @@
 class CreateTasks < ActiveRecord::Migration[7.0]
   def change
     create_table :tasks do |t|
-      t.string :title, null: false
-      t.text :description, null: true
-      t.datetime :target_at, null: true
-      t.datetime :completed_at, null: true
-      t.boolean :completed, null: false, default: false
-      t.references :user, foreign_key: true
+      t.text :state
+      t.text :task
+      t.date :limit_date
+      t.text :free_comment
+
       t.timestamps
     end
   end
