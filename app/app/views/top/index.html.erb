@@ -1,0 +1,7 @@
+<p>
+    <% if user_signed_in? %>
+        <a href="/tasks" class="waves-effect waves-light btn">Task</a>
+    <% else %>
+        <%= link_to 'サインアップ', new_user_registration_path, class: "waves-effect waves-light btn" %> <%= link_to 'ログイン', new_user_session_path, class: "waves-effect waves-light btn" %>
+    <% end %>
+</p>

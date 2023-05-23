@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
 
-  resources :tasks
+  resources :tasks, :only => [:index, :show, :create, :update, :destroy]
 
   devise_for :users, skip: [:sessions]
 
