@@ -7,8 +7,8 @@ services:
       dockerfile: ../dockerfiles/app/Dockerfile
     working_dir: /usr/src/app/
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
-    ports:
-      - "8000:3000"
+    expose:
+      - "3000"
     volumes:
       - ./app:/usr/src/app
     env_file:
@@ -43,34 +43,36 @@ services:
   #     - back_network
   #   restart: always
 
-  # https-portal:
-  #   image: steveltn/https-portal:1
-  #   ports:
-  #     - 80:80
-  #     - 443:443
-  #   depends_on:
-  #     - nginx
-  #   networks:
-  #     - front_network
-  #     - back_network
-  #   environment:
-  #     DOMAINS: 'localhost -> http://nginx:8002'
-  #     STAGE: 'local'
-  #   restart: always
-
-  pgadmin4:
-    image: dpage/pgadmin4
+  https-portal:
+    image: steveltn/https-portal:1
     ports:
-        - 8880:80
-    volumes:
-        - pgadmin4_data:/var/lib/pgadmin
-    environment:
-        PGADMIN_DEFAULT_EMAIL:  
-        PGADMIN_DEFAULT_PASSWORD: password
+      - 80:80
+      - 443:443
     depends_on:
-      - db
+      - app
     networks:
+      - front_network
       - back_network
+    environment:
+      DOMAINS: 'localhost -> http://app:3000'
+      # DOMAINS: 'oltodo.r74tech.com -> http://app:3000'
+      STAGE: 'local'
+      # STAGE: 'production'
+    restart: always
+
+  # pgadmin4:
+  #   image: dpage/pgadmin4
+  #   ports:
+  #       - 8880:80
+  #   volumes:
+  #       - pgadmin4_data:/var/lib/pgadmin
+  #   environment:
+  #       PGADMIN_DEFAULT_EMAIL:  
+  #       PGADMIN_DEFAULT_PASSWORD: password
+  #   depends_on:
+  #     - db
+  #   networks:
+  #     - back_network
 
 volumes:
   db_data:
