@@ -12,6 +12,8 @@ RUN gem update --system ${RUBYGEMS_VERSION} && \
 
 COPY . ./usr/src
 
+RUN bundle exec rails assets:precompile RAILS_ENV=production
+
 COPY entrypoint.sh /usr/bin/
 RUN chmod +x /usr/bin/entrypoint.sh
 ENTRYPOINT ["entrypoint.sh"]

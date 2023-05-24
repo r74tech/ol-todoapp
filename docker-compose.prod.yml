@@ -1,0 +1,86 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: ./app
+      dockerfile: ../dockerfiles/app/Dockerfile
+    working_dir: /usr/src/app/
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0' -e production"
+    expose:
+      - "3000"
+    volumes:
+      - ./app:/usr/src/app
+    env_file:
+      - ./.env
+    depends_on:
+      - db
+    networks:
+      - back_network
+    restart: always
+
+  db:
+    image: postgres:14.6-alpine
+    volumes:
+      - db_data:/var/lib/postgresql/data/
+    env_file:
+      - ./.env
+    networks:
+      - back_network
+    restart: always
+  
+  # nginx:
+  #   build:
+  #     context: ./nginx
+  #     dockerfile: ../dockerfiles/nginx/Dockerfile
+  #   expose:
+  #     - 8002
+  #   depends_on:
+  #     - back
+  #     - front
+  #   networks:
+  #     - front_network
+  #     - back_network
+  #   restart: always
+
+  https-portal:
+    image: steveltn/https-portal:1
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - app
+    networks:
+      - front_network
+      - back_network
+    environment:
+      # DOMAINS: 'localhost -> http://app:3000'
+      DOMAINS: 'oltodo.r74tech.com -> http://app:3000'
+      # STAGE: 'local'
+      STAGE: 'production'
+    restart: always
+
+  # pgadmin4:
+  #   image: dpage/pgadmin4
+  #   ports:
+  #       - 8880:80
+  #   volumes:
+  #       - pgadmin4_data:/var/lib/pgadmin
+  #   environment:
+  #       PGADMIN_DEFAULT_EMAIL:  
+  #       PGADMIN_DEFAULT_PASSWORD: password
+  #   depends_on:
+  #     - db
+  #   networks:
+  #     - back_network
+
+volumes:
+  db_data:
+  pgadmin4_data:
+  node_modules:
+
+networks:
+  front_network:
+    external: false
+  back_network:
+    external: false

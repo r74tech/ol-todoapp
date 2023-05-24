@@ -31,3 +31,26 @@ docker compose run --rm  app rails g rspec:install
 ```bash
 docker compose run --rm  app rails db:migrate:reset RAILS_ENV=test
 ```
+
+
+# production
+```bash
+docker compose -f docker-compose.prod.yml build
+```
+
+```bash
+docker compose run --rm  app rails assets:precompile RAILS_ENV=production
+```
+
+
+```bash
+docker compose run --rm  app rails db:create RAILS_ENV=production
+```
+
+```bash
+docker compose run --rm  app rails db:migrate RAILS_ENV=production
+```
+
+```bash
+docker compose -f docker-compose.prod.yml up -d
+```
