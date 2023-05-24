@@ -29,20 +29,6 @@ services:
       - back_network
     restart: always
   
-  # nginx:
-  #   build:
-  #     context: ./nginx
-  #     dockerfile: ../dockerfiles/nginx/Dockerfile
-  #   expose:
-  #     - 8002
-  #   depends_on:
-  #     - back
-  #     - front
-  #   networks:
-  #     - front_network
-  #     - back_network
-  #   restart: always
-
   https-portal:
     image: steveltn/https-portal:1
     ports:
@@ -59,20 +45,6 @@ services:
       # STAGE: 'local'
       STAGE: 'production'
     restart: always
-
-  # pgadmin4:
-  #   image: dpage/pgadmin4
-  #   ports:
-  #       - 8880:80
-  #   volumes:
-  #       - pgadmin4_data:/var/lib/pgadmin
-  #   environment:
-  #       PGADMIN_DEFAULT_EMAIL:  
-  #       PGADMIN_DEFAULT_PASSWORD: password
-  #   depends_on:
-  #     - db
-  #   networks:
-  #     - back_network
 
 volumes:
   db_data:
